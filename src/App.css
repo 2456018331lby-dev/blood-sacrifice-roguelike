@@ -1,0 +1,1025 @@
+/* ============================================================
+   血祭回响 - App.css
+   移动端优先 max-width 420px，暗黑血腥主题
+   包含：卡牌打出动画、伤害/护甲脉冲、献祭呼吸、
+         敌人死亡粒子、Boss振动、畸变氛围
+   ============================================================ */
+
+/* ---------- Keyframe Animations ---------- */
+
+/* 卡牌打出：缩放 + 发光 */
+@keyframes cardPlay {
+  0%   { transform: scale(1); box-shadow: 0 0 0 rgba(255,77,141,0); }
+  40%  { transform: scale(1.08); box-shadow: 0 0 30px rgba(255,77,141,0.7), 0 0 60px rgba(255,77,141,0.3); }
+  100% { transform: scale(0.92); box-shadow: 0 0 0 rgba(255,77,141,0); opacity: 0.6; }
+}
+
+/* 伤害数字脉冲 */
+@keyframes damagePulse {
+  0%   { transform: scale(1); color: var(--danger); text-shadow: 0 0 0 rgba(255,107,129,0); }
+  25%  { transform: scale(1.35); color: #ff2040; text-shadow: 0 0 18px rgba(255,32,64,0.9); }
+  100% { transform: scale(1); color: var(--danger); text-shadow: 0 0 0 rgba(255,107,129,0); }
+}
+
+/* 护甲数字脉冲 */
+@keyframes blockPulse {
+  0%   { transform: scale(1); text-shadow: 0 0 0 rgba(143,92,255,0); }
+  30%  { transform: scale(1.25); text-shadow: 0 0 14px rgba(143,92,255,0.7); }
+  100% { transform: scale(1); text-shadow: 0 0 0 rgba(143,92,255,0); }
+}
+
+/* 治疗脉冲 */
+@keyframes healPulse {
+  0%   { transform: scale(1); filter: brightness(1); }
+  40%  { transform: scale(1.3); filter: brightness(1.8); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+
+/* 献祭选项红色呼吸 */
+@keyframes sacrificeBreathe {
+  0%, 100% { box-shadow: 0 0 8px rgba(255,32,64,0.15), inset 0 0 8px rgba(255,32,64,0.05); }
+  50%      { box-shadow: 0 0 22px rgba(255,32,64,0.45), inset 0 0 18px rgba(255,32,64,0.12); }
+}
+
+/* 献祭标题呼吸 */
+@keyframes sacrificeTitleBreathe {
+  0%, 100% { text-shadow: 0 0 6px rgba(255,32,64,0.3); color: var(--danger); }
+  50%      { text-shadow: 0 0 20px rgba(255,32,64,0.8), 0 0 40px rgba(255,0,50,0.4); color: #ff3050; }
+}
+
+/* 敌人死亡粒子暗示 */
+@keyframes enemyDeath {
+  0%   { transform: scale(1); opacity: 1; filter: brightness(1); }
+  50%  { transform: scale(0.96); opacity: 0.6; filter: brightness(2) saturate(1.5); }
+  100% { transform: scale(0.85); opacity: 0; filter: brightness(3) saturate(2); }
+}
+
+/* 死亡粒子飞散 */
+@keyframes deathParticle1 {
+  0%   { transform: translate(0, 0) scale(1); opacity: 1; }
+  100% { transform: translate(-20px, -30px) scale(0); opacity: 0; }
+}
+@keyframes deathParticle2 {
+  0%   { transform: translate(0, 0) scale(1); opacity: 1; }
+  100% { transform: translate(22px, -24px) scale(0); opacity: 0; }
+}
+@keyframes deathParticle3 {
+  0%   { transform: translate(0, 0) scale(0.7); opacity: 0.8; }
+  100% { transform: translate(8px, -38px) scale(0); opacity: 0; }
+}
+@keyframes deathParticle4 {
+  0%   { transform: translate(0, 0) scale(0.6); opacity: 0.9; }
+  100% { transform: translate(-16px, -20px) scale(0); opacity: 0; }
+}
+@keyframes deathParticle5 {
+  0%   { transform: translate(0, 0) scale(0.8); opacity: 0.7; }
+  100% { transform: translate(14px, -32px) scale(0); opacity: 0; }
+}
+
+/* Boss 战画面振动 */
+@keyframes bossShake {
+  0%, 100% { transform: translate(0, 0); }
+  10%      { transform: translate(-3px, 1px); }
+  20%      { transform: translate(3px, -1px); }
+  30%      { transform: translate(-2px, 2px); }
+  40%      { transform: translate(2px, -2px); }
+  50%      { transform: translate(-1px, 1px); }
+  60%      { transform: translate(1px, -1px); }
+  70%      { transform: translate(-2px, 0); }
+  80%      { transform: translate(2px, 0); }
+  90%      { transform: translate(0, 1px); }
+}
+
+/* Boss 入场冲击 */
+@keyframes bossIntro {
+  0%   { transform: scale(0.7); opacity: 0; box-shadow: 0 0 0 rgba(255,0,50,0); }
+  60%  { transform: scale(1.05); opacity: 1; box-shadow: 0 0 60px rgba(255,0,50,0.5); }
+  100% { transform: scale(1); opacity: 1; box-shadow: 0 0 20px rgba(255,0,50,0.2); }
+}
+
+/* 畸变背景红色脉动 */
+@keyframes corruptionBgPulse {
+  0%, 100% { background-position: 50% 0%; }
+  50%      { background-position: 50% 100%; }
+}
+
+/* 手牌悬浮微动 */
+@keyframes cardFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-2px); }
+}
+
+/* 能量闪烁 */
+@keyframes energyGlow {
+  0%, 100% { text-shadow: 0 0 6px rgba(143,92,255,0.3); }
+  50%      { text-shadow: 0 0 16px rgba(143,92,255,0.7); }
+}
+
+/* 血量过低闪烁 */
+@keyframes lowHpBlink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.5; }
+}
+
+/* 新日志条目滑入 */
+@keyframes logSlideIn {
+  0%   { transform: translateX(-12px); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+/* 奖励卡片入场 */
+@keyframes rewardFlyIn {
+  0%   { transform: translateY(16px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+/* 按钮辉光 */
+@keyframes btnGlowPulse {
+  0%, 100% { box-shadow: 0 4px 20px rgba(255,77,141,0.3); }
+  50%      { box-shadow: 0 4px 32px rgba(255,77,141,0.55), 0 0 60px rgba(255,77,141,0.15); }
+}
+
+/* Boss 血条脉冲 */
+@keyframes bossHpMeterPulse {
+  0%, 100% { filter: brightness(1); }
+  50%      { filter: brightness(1.4) saturate(1.3); }
+}
+
+/* 畸变值数字跳动 */
+@keyframes corruptionDigitPulse {
+  0%, 100% { color: var(--accent); }
+  30%      { color: #ff2040; text-shadow: 0 0 12px rgba(255,0,50,0.8); }
+  70%      { color: var(--danger); text-shadow: 0 0 6px rgba(255,107,129,0.5); }
+}
+
+
+/* ====== Layout ====== */
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 12px 10px 24px;
+  gap: 12px;
+  /* 畸变背景过渡：通过 --corruption 变量动态调整红色 */
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(180, 20, 50, calc(var(--corruption, 0) * 0.025)), transparent 60%),
+    radial-gradient(ellipse at 30% 100%, rgba(130, 10, 30, calc(var(--corruption, 0) * 0.02)), transparent 50%);
+  transition: background 0.6s ease;
+  position: relative;
+}
+
+/* Boss 战振动状态 - 需要 JS 添加 .boss-fight 类 */
+.app-shell.boss-fight {
+  animation: bossShake 0.5s ease-in-out infinite;
+}
+
+/* 畸变氛围：红色扫描线叠加 */
+.app-shell::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(255, 20, 40, calc(var(--corruption, 0) * 0.008)) 2px,
+    rgba(255, 20, 40, calc(var(--corruption, 0) * 0.008)) 4px
+  );
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+/* ====== Screen ====== */
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  flex: 1;
+}
+
+/* ====== Panel ====== */
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: var(--shadow);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+
+/* ====== Title Panel ====== */
+.title-panel {
+  text-align: center;
+  padding: 28px 20px 24px;
+  border: 1px solid rgba(255, 77, 141, 0.25);
+  position: relative;
+  overflow: hidden;
+}
+/* 标题面板微光扫描 */
+.title-panel::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at 50% 0%, rgba(255,77,141,0.06), transparent 50%);
+  animation: corruptionBgPulse 8s ease-in-out infinite;
+  pointer-events: none;
+}
+.title-panel h1 {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.6px;
+  color: var(--accent);
+  margin: 4px 0 10px;
+  text-shadow: 0 0 40px rgba(255, 77, 141, 0.5);
+  animation: corruptionDigitPulse 3s ease-in-out infinite;
+}
+.title-panel h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 6px;
+}
+.title-panel .eyebrow {
+  font-size: 11px;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: var(--accent-2);
+  margin: 0 0 4px;
+}
+.title-panel .lead {
+  color: var(--muted);
+  line-height: 1.6;
+  font-size: 13.5px;
+}
+
+/* ====== Rules Panel ====== */
+.rules-panel {
+  padding: 18px;
+}
+.rules-panel h2 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--accent-2);
+  margin: 0 0 10px;
+}
+.rules-panel ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.rules-panel li {
+  color: var(--text);
+  font-size: 13.5px;
+  padding-left: 14px;
+  position: relative;
+  line-height: 1.5;
+  transition: color 0.2s ease;
+}
+.rules-panel li::before {
+  content: '◆';
+  position: absolute;
+  left: 0;
+  top: -1px;
+  font-size: 8px;
+  color: var(--accent);
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+.rules-panel li:hover::before {
+  color: #ff3060;
+  text-shadow: 0 0 8px rgba(255,77,141,0.6);
+}
+
+/* ====== Section Head ====== */
+.section-head {
+  margin-bottom: 10px;
+}
+.section-head h2 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent-2);
+  margin: 0;
+}
+.section-head p {
+  font-size: 11px;
+  color: var(--muted);
+  margin: 2px 0 0;
+}
+
+/* ====== Buttons ====== */
+.primary-btn {
+  background: linear-gradient(135deg, var(--accent), #b8306f);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 14px 24px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+  box-shadow: 0 4px 20px rgba(255, 77, 141, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+/* 按钮光泽扫过 */
+.primary-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  transition: left 0.5s ease;
+}
+.primary-btn:hover::after {
+  left: 100%;
+}
+.primary-btn:active {
+  transform: scale(0.96);
+  box-shadow: 0 2px 12px rgba(255, 77, 141, 0.5);
+}
+.primary-btn.huge {
+  font-size: 18px;
+  padding: 18px 32px;
+  width: 100%;
+  animation: btnGlowPulse 2.5s ease-in-out infinite;
+}
+
+.secondary-btn {
+  background: var(--panel-soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.12s ease;
+}
+.secondary-btn:active {
+  background: rgba(255, 255, 255, 0.06);
+  transform: scale(0.97);
+}
+
+.end-turn {
+  margin-top: 10px;
+  width: 100%;
+  background: rgba(143, 92, 255, 0.15);
+  border-color: rgba(143, 92, 255, 0.3);
+}
+.end-turn:hover {
+  background: rgba(143, 92, 255, 0.22);
+  border-color: rgba(143, 92, 255, 0.5);
+  box-shadow: 0 0 16px rgba(143, 92, 255, 0.2);
+}
+
+/* ====== HUD ====== */
+.hud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px 14px;
+}
+.hud > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 50px;
+  flex: 1;
+  transition: transform 0.15s ease;
+}
+.hud span {
+  font-size: 9px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--muted);
+  transition: color 0.3s ease;
+}
+.hud strong {
+  font-size: 15px;
+  font-weight: 700;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+/* 能量数字闪烁 */
+.hud > div:nth-child(3) strong {
+  animation: energyGlow 2s ease-in-out infinite;
+}
+
+/* ====== Enemy Panel ====== */
+.enemies-panel {
+  position: relative;
+}
+.enemy-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.enemy-card {
+  background: rgba(82, 14, 36, 0.45);
+  border: 1px solid rgba(255, 77, 141, 0.18);
+  border-radius: 10px;
+  padding: 12px 14px;
+  cursor: pointer;
+  text-align: left;
+  color: var(--text);
+  transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease, transform 0.15s ease;
+  width: 100%;
+  font-size: 13px;
+  position: relative;
+  overflow: hidden;
+}
+.enemy-card:hover {
+  border-color: rgba(255, 77, 141, 0.35);
+  background: rgba(82, 14, 36, 0.58);
+}
+.enemy-card.selected {
+  border-color: var(--accent);
+  background: rgba(255, 77, 141, 0.12);
+  box-shadow: 0 0 18px rgba(255, 77, 141, 0.2), inset 0 0 12px rgba(255, 77, 141, 0.05);
+  transform: scale(1.01);
+}
+/* 选中标记脉冲 */
+.enemy-card.selected::before {
+  content: '▸';
+  position: absolute;
+  left: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--accent);
+  font-size: 14px;
+  animation: damagePulse 1.2s ease-in-out infinite;
+}
+
+.enemy-top {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.enemy-top strong {
+  font-size: 13px;
+}
+.enemy-top span {
+  font-size: 12px;
+  color: var(--muted);
+  transition: color 0.3s ease, transform 0.15s ease;
+}
+
+/* 血量计 */
+.meter {
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.06);
+  margin-bottom: 8px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
+}
+.meter div {
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--danger), var(--accent));
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+/* 血条光泽 */
+.meter div::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 50%;
+  background: rgba(255,255,255,0.18);
+  border-radius: 3px 3px 0 0;
+}
+
+.enemy-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* 敌人死亡动画类 - 需要 JS 添加 */
+.enemy-card.dying {
+  animation: enemyDeath 0.6s ease-out forwards;
+}
+/* 死亡粒子 - 使用伪元素暗示 */
+.enemy-card.dying::after {
+  content: '';
+  position: absolute;
+  top: 30%;
+  right: 20%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--danger);
+  box-shadow:
+    10px -8px 0 var(--accent),
+    -8px -12px 0 #ff4060,
+    18px -4px 0 var(--warn),
+    -14px -6px 0 var(--danger),
+    6px -16px 0 var(--accent-2);
+  animation: deathParticle1 0.5s ease-out forwards,
+             deathParticle2 0.55s 0.05s ease-out forwards,
+             deathParticle3 0.45s 0.08s ease-out forwards,
+             deathParticle4 0.5s 0.03s ease-out forwards,
+             deathParticle5 0.48s 0.06s ease-out forwards;
+  pointer-events: none;
+}
+
+/* Boss 特殊样式 */
+.enemy-card[class*="boss"] {
+  /* 备用：无法通过 CSS 选择器精确匹配时，通过 JS 添加 */
+}
+
+/* ====== Hand Panel ====== */
+.hand-panel {
+  position: relative;
+}
+.hand-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.hand-card {
+  background: rgba(52, 30, 56, 0.7);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px 14px;
+  cursor: pointer;
+  text-align: left;
+  color: var(--text);
+  width: 100%;
+  font-size: 13px;
+  transition: border-color 0.25s ease, background 0.25s ease,
+              box-shadow 0.25s ease, transform 0.2s ease, opacity 0.2s ease;
+  position: relative;
+}
+.hand-card:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  filter: grayscale(0.4);
+}
+
+/* 可用卡牌悬浮效果 */
+.hand-card:not(:disabled):hover {
+  border-color: var(--accent-2);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(143, 92, 255, 0.15);
+}
+
+/* 卡牌打出动画：点击瞬间触发 */
+.hand-card:not(:disabled):active {
+  animation: cardPlay 0.35s ease-out forwards;
+}
+
+/* 卡牌打出后短暂残影 */
+.hand-card:not(:disabled):active::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  background: radial-gradient(circle at center, rgba(255,77,141,0.25), transparent 70%);
+  animation: cardPlay 0.35s ease-out forwards;
+  pointer-events: none;
+}
+
+/* 稀有度边框 */
+.hand-card.rarity-common {
+  border-left: 3px solid #6eb5ff;
+  transition: border-left-color 0.25s ease, box-shadow 0.25s ease;
+}
+.hand-card.rarity-common:not(:disabled):hover {
+  border-left-color: #8ed0ff;
+  box-shadow: 0 0 12px rgba(110, 181, 255, 0.15);
+}
+
+.hand-card.rarity-rare {
+  border-left: 3px solid #ffb347;
+  transition: border-left-color 0.25s ease, box-shadow 0.25s ease;
+}
+.hand-card.rarity-rare:not(:disabled):hover {
+  border-left-color: #ffc670;
+  box-shadow: 0 0 16px rgba(255, 179, 71, 0.2);
+}
+
+.hand-card.rarity-starter {
+  border-left: 3px solid var(--muted);
+}
+
+/* 强化态 - 带发光脉冲 */
+.hand-card.boosted {
+  border-color: var(--accent);
+  box-shadow: 0 0 14px rgba(255, 77, 141, 0.23);
+  background: rgba(82, 14, 36, 0.42);
+  animation: sacrificeBreathe 2s ease-in-out infinite;
+}
+.hand-card.boosted:not(:disabled):hover {
+  box-shadow: 0 0 24px rgba(255, 77, 141, 0.4);
+  border-color: #ff6090;
+}
+
+/* 卡牌内部 */
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+.card-head strong {
+  font-size: 13px;
+  font-weight: 700;
+  transition: color 0.2s ease;
+}
+.card-head span {
+  font-size: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-weight: 700;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+/* 0费卡特殊标记 */
+.card-head span:only-child,
+.hand-card .card-head span {
+  /* 已被上面的规则覆盖，此处保留以备扩展 */
+}
+.hand-card p {
+  font-size: 11.5px;
+  color: var(--muted);
+  margin: 0 0 4px;
+  line-height: 1.4;
+}
+.hand-card small {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  transition: color 0.2s ease;
+}
+
+/* ====== Reward Screen ====== */
+.reward-screen {
+  gap: 14px;
+}
+
+.reward-grid {
+  padding: 14px;
+}
+.reward-grid h3 {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--heal);
+  margin: 0 0 8px;
+  transition: color 0.3s ease;
+}
+
+/* 献祭区域 */
+.reward-grid.sacrifice {
+  position: relative;
+  overflow: hidden;
+}
+.reward-grid.sacrifice h3 {
+  color: var(--danger);
+  animation: sacrificeTitleBreathe 2s ease-in-out infinite;
+}
+/* 献祭区域红色呼吸背景 */
+.reward-grid.sacrifice::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 30%, rgba(255, 32, 64, 0.08), transparent 60%);
+  animation: sacrificeBreathe 2s ease-in-out infinite;
+  pointer-events: none;
+  border-radius: 14px;
+}
+
+.choice-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.choice-card {
+  background: var(--panel-soft);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 14px;
+  cursor: pointer;
+  text-align: left;
+  color: var(--text);
+  width: 100%;
+  font-size: 13px;
+  transition: border-color 0.25s ease, background 0.25s ease,
+              box-shadow 0.25s ease, transform 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: relative;
+  animation: rewardFlyIn 0.4s ease-out both;
+}
+.choice-card:nth-child(1) { animation-delay: 0s; }
+.choice-card:nth-child(2) { animation-delay: 0.08s; }
+.choice-card:nth-child(3) { animation-delay: 0.16s; }
+
+.choice-card:hover {
+  transform: translateY(-1px);
+  border-color: var(--heal);
+  box-shadow: 0 4px 16px rgba(114, 240, 184, 0.12);
+}
+.choice-card:active {
+  border-color: var(--heal);
+  background: rgba(114, 240, 184, 0.06);
+  transform: scale(0.98);
+}
+
+/* 献祭卡片 */
+.choice-card.sacrifice-card {
+  border-color: rgba(255, 107, 129, 0.3);
+  animation: sacrificeBreathe 2s ease-in-out infinite,
+             rewardFlyIn 0.4s ease-out both;
+}
+.choice-card.sacrifice-card:nth-child(1) { animation-delay: 0.12s; }
+.choice-card.sacrifice-card:nth-child(2) { animation-delay: 0.2s; }
+
+.choice-card.sacrifice-card:hover {
+  border-color: var(--danger);
+  background: rgba(255, 107, 129, 0.1);
+  box-shadow: 0 0 24px rgba(255, 32, 64, 0.25);
+  transform: translateY(-2px);
+}
+.choice-card.sacrifice-card:active {
+  border-color: var(--danger);
+  background: rgba(255, 107, 129, 0.15);
+  transform: scale(0.97);
+  box-shadow: 0 0 32px rgba(255, 32, 64, 0.4);
+}
+
+/* 献祭卡片上的血滴装饰 */
+.choice-card.sacrifice-card::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  right: 16px;
+  width: 10px;
+  height: 10px;
+  background: var(--danger);
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  opacity: 0.7;
+  animation: sacrificeBreathe 2s ease-in-out infinite;
+}
+
+.choice-card strong {
+  font-size: 13px;
+  font-weight: 700;
+  transition: color 0.2s ease;
+}
+.choice-card.sacrifice-card strong {
+  color: var(--danger);
+  transition: text-shadow 0.3s ease;
+}
+.choice-card span {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+/* ====== End Screen ====== */
+.summary-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.summary-panel > div {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  transition: background 0.2s ease;
+}
+.summary-panel span {
+  color: var(--muted);
+}
+.summary-panel strong {
+  font-weight: 700;
+  transition: color 0.3s ease;
+}
+
+/* ====== Floating Damage Numbers ====== */
+.float-num {
+  position: absolute;
+  right: 8px;
+  font-size: 16px;
+  font-weight: 900;
+  pointer-events: none;
+  z-index: 10;
+  animation: floatUp 1.2s ease-out forwards;
+}
+@keyframes floatUp {
+  0%   { opacity: 1; transform: translateY(0) scale(1); }
+  60%  { opacity: 0.8; transform: translateY(-28px) scale(1.2); }
+  100% { opacity: 0; transform: translateY(-48px) scale(0.8); }
+}
+.float-dmg { color: #ff4060; text-shadow: 0 0 10px rgba(255,64,96,0.7); }
+.float-heal { color: var(--heal); text-shadow: 0 0 10px rgba(114,240,184,0.7); right: 30px; }
+.player-float { left: 8px; right: auto; }
+
+/* ====== Boss Styles ====== */
+.boss-card {
+  border: 2px solid rgba(255, 32, 64, 0.5) !important;
+  background: rgba(100, 10, 30, 0.5) !important;
+  animation: bossIntro 0.6s ease-out;
+}
+.boss-card.selected {
+  border-color: #ff2040 !important;
+  box-shadow: 0 0 30px rgba(255,32,64,0.4), 0 0 60px rgba(255,0,50,0.15) !important;
+}
+.boss-icon { font-size: 15px; margin-right: 4px; animation: damagePulse 2s ease-in-out infinite; }
+.boss-hp { color: #ff4060 !important; font-weight: 800; text-shadow: 0 0 8px rgba(255,64,96,0.5); }
+.boss-meter { height: 8px !important; }
+.boss-meter div { 
+  background: linear-gradient(90deg, #ff2040, #ff6b81, var(--accent)) !important; 
+  animation: bossHpMeterPulse 1.5s ease-in-out infinite;
+}
+
+/* ====== Low HP / HUD States ====== */
+.hud-pulse { border-color: rgba(255, 107, 129, 0.45) !important; box-shadow: 0 0 16px rgba(255,107,129,0.12); }
+.hud-pulse-fast { border-color: rgba(255, 32, 64, 0.7) !important; animation: sacrificeBreathe 0.8s ease-in-out infinite; }
+.hp-low strong { color: var(--danger) !important; animation: damagePulse 0.6s ease-in-out infinite; }
+
+/* ====== Card Glow Out ====== */
+.card-glow-out {
+  animation: cardPlay 0.4s ease-out forwards;
+}
+
+/* ====== Sacrifice Warnings ====== */
+.sacrifice-warning {
+  font-size: 11px;
+  color: var(--danger);
+  text-align: center;
+  margin: -4px 0 8px;
+  animation: sacrificeTitleBreathe 2s ease-in-out infinite;
+}
+.sacrifice-hint {
+  font-size: 9px !important;
+  color: rgba(255,107,129,0.6) !important;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ====== Log Enter Animation ====== */
+.log-enter {
+  animation: logSlideIn 0.35s ease-out both !important;
+  color: var(--text) !important;
+}
+
+/* ====== Log Panel ====== */
+.log-panel {
+  position: relative;
+}
+.log-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 148px;
+  overflow-y: auto;
+}
+.log-list p {
+  font-size: 11px;
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.5;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  padding-bottom: 4px;
+  animation: logSlideIn 0.35s ease-out both;
+  transition: color 0.2s ease;
+}
+.log-list p:nth-child(1) { animation-delay: 0s; }
+.log-list p:nth-child(2) { animation-delay: 0.03s; }
+.log-list p:nth-child(3) { animation-delay: 0.06s; }
+.log-list p:nth-child(4) { animation-delay: 0.09s; }
+.log-list p:nth-child(5) { animation-delay: 0.12s; }
+.log-list p:nth-child(6) { animation-delay: 0.15s; }
+.log-list p:nth-child(7) { animation-delay: 0.18s; }
+.log-list p:nth-child(8) { animation-delay: 0.21s; }
+
+/* ====== Deck Panel ====== */
+.deck-panel {
+  padding: 12px 14px;
+}
+.deck-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.deck-tags span {
+  font-size: 11px;
+  padding: 3px 9px;
+  border-radius: 12px;
+  background: rgba(143, 92, 255, 0.12);
+  border: 1px solid rgba(143, 92, 255, 0.2);
+  color: var(--accent-2);
+  letter-spacing: 0.3px;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+}
+.deck-tags span:hover {
+  background: rgba(143, 92, 255, 0.2);
+  border-color: rgba(143, 92, 255, 0.4);
+  transform: scale(1.04);
+}
+
+/* ====== Start / End Screen Spacing ====== */
+.start-screen,
+.end-screen {
+  align-items: center;
+  padding-top: 20px;
+}
+
+/* ====== Battle Screen Enhancement ====== */
+.battle-screen {
+  position: relative;
+}
+
+/* ====== 通用增强过渡 ====== */
+/* 全局：所有可交互元素添加平滑过渡 */
+button {
+  transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+/* 滚动条美化 */
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 77, 141, 0.25);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 77, 141, 0.4);
+}
+
+
+/* ============================================================
+   响应式 / 安全区域 / 大屏微调
+   ============================================================ */
+
+/* iPhone 刘海屏安全区域 */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .app-shell {
+    padding-bottom: calc(24px + env(safe-area-inset-bottom));
+  }
+}
+
+/* 极小屏优化 (< 360px) */
+@media (max-width: 360px) {
+  .app-shell {
+    padding: 8px 6px 16px;
+    gap: 8px;
+  }
+  .hud > div {
+    min-width: 40px;
+  }
+  .hud strong {
+    font-size: 13px;
+  }
+  .title-panel h1 {
+    font-size: 26px;
+  }
+}
+
+/* 平板/大屏微调 (> 420px) */
+@media (min-width: 421px) {
+  .app-shell {
+    border-left: 1px solid rgba(255, 77, 141, 0.1);
+    border-right: 1px solid rgba(255, 77, 141, 0.1);
+    box-shadow: 0 0 80px rgba(0, 0, 0, 0.4);
+  }
+}
+
+/* 减少动画偏好 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
